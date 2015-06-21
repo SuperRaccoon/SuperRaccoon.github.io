@@ -241,7 +241,15 @@
              Draw something by tapping or dragging.<br/><br/>
              Works on iOS, Android and desktop/laptop touchscreens using Chrome/Firefox/Safari.<br/><br/>
              <input type="submit" value="Clear Sketchpad" id="clear_button" onclick="clearCanvas(canvas,ctx);">
-	
+
+
+			<input type="upload" value="Upload Image" id="upload_button" onclick="clearCanvas(canvas,ctx);">
+
+			
+
+
+
+
              <input type="submit" value="View Image" id="save_button" onclick="viewImageLocal(canvas); return false;">
 	     <form name='save_remote' id='save_remote' method='POST' action='/sketchpad/save-image.php' onsubmit='saveImageRemote(canvas); return false;'>
                  <input type="submit" value="Save Image" id="save_button">
