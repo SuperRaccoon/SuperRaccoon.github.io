@@ -12,49 +12,20 @@
     // Variables to keep track of the touch position
     var touchX,touchY;
 
-    // Keep track of the old/last position when drawing a line
-    // We set it to -1 at the start to indicate that we don't have a good value for it yet
-    var lastX,lastY=-1;
-
-    // Draws a line between the specified position on the supplied canvas name
+    // Draws a dot at a specific position on the supplied canvas name
     // Parameters are: A canvas context, the x position, the y position, the size of the dot
-    function drawLine(ctx,x,y,size) {
-
-        // If lastX is not set, set lastX and lastY to the current position 
-        if (lastX==-1) {
-            lastX=x;
-	    lastY=y;
-        }
-
+    function drawDot(ctx,x,y,size) {
         // Let's use black by setting RGB values to 0, and 255 alpha (completely opaque)
         r=0; g=0; b=0; a=255;
 
         // Select a fill style
-        ctx.strokeStyle = "rgba("+r+","+g+","+b+","+(a/255)+")";
+        ctx.fillStyle = "rgba("+r+","+g+","+b+","+(a/255)+")";
 
-        // Set the line "cap" style to round, so lines at different angles can join into each other
-        ctx.lineCap = "round";
-        //ctx.lineJoin = "round";
-
-
-        // Draw a filled line
+        // Draw a filled circle
         ctx.beginPath();
-
-	// First, move to the old (previous) position
-	ctx.moveTo(lastX,lastY);
-
-	// Now draw a line to the current touch/pointer position
-	ctx.lineTo(x,y);
-
-        // Set the line thickness and draw the line
-        ctx.lineWidth = size;
-        ctx.stroke();
-
+        ctx.arc(x, y, size, 0, Math.PI*2, true); 
         ctx.closePath();
-
-	// Update the last position to reference the current position
-	lastX=x;
-	lastY=y;
+        ctx.fill();
     } 
 
     // Clear the canvas context using the canvas width and height
@@ -62,19 +33,49 @@
         ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
 
+    // Convert the canvas contents to a PNG image file, and copy it into a smaller image on the page so it can be saved more easily
+    // From: http://stackoverflow.com/questions/10673122/how-to-save-canvas-as-an-image-with-canvas-todataurl
+    function updateImageLocal(canvas) {
+        var image_data = canvas.toDataURL("image/png");  
+
+	// Displaying the image data in a "normal" image means users need to click or long-tap on it to save, but is compatible with 
+        // more devices
+	document.getElementById('image_display').src = image_data; // Place the image data in to the form
+    }
+
+    // Convert the canvas contents to a PNG image file, and output it in a new browser window
+    // From: http://stackoverflow.com/questions/10673122/how-to-save-canvas-as-an-image-with-canvas-todataurl
+    function viewImageLocal(canvas) {
+        var image_data = canvas.toDataURL("image/png");
+        // var image_data = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream"); // This forces a download, but is problematic
+
+        // The browser will typically display the image in a new tab
+	window.open(image_data);
+    }
+
+    // Send image to remote server. This requires the "save_remote" form further down the page.
+    // This form has a hidden field called "save_remote_data". When the Save button is clicked, the form is not immediately
+    // submitted, but this function is called, which first takes the image data from the canvas, and put it into the "save_remote_data" hidden field.
+    // Then, the form is submitted, and a script on our web server called "save-image.php" will see the contents of the form, and the encoded image data.
+    // Adapted from: http://stackoverflow.com/questions/13198131/how-to-save-a-html5-canvas-as-image-on-a-server
+    function saveImageRemote(canvas) {
+        var image_data = canvas.toDataURL("image/png");
+	document.getElementById('save_remote_data').value = image_data; // Place the image data in to the form
+	document.forms["save_remote"].submit(); // Submit the form to the server
+    }
+
     // Keep track of the mouse button being pressed and draw a dot at current location
     function sketchpad_mouseDown() {
         mouseDown=1;
-        drawLine(ctx,mouseX,mouseY,12);
+        drawDot(ctx,mouseX,mouseY,12);
     }
 
     // Keep track of the mouse button being released
     function sketchpad_mouseUp() {
         mouseDown=0;
 
-        // Reset lastX and lastY to -1 to indicate that they are now invalid, since we have lifted the "pen"
-        lastX=-1;
-        lastY=-1;
+        // Update a local copy of the image for easier saving
+        updateImageLocal(canvas);
     }
 
     // Keep track of the mouse position and draw a dot if mouse button is currently pressed
@@ -84,7 +85,7 @@
 
         // Draw a dot if the mouse button is currently being pressed
         if (mouseDown==1) {
-            drawLine(ctx,mouseX,mouseY,12);
+            drawDot(ctx,mouseX,mouseY,12);
         }
     }
 
@@ -108,16 +109,10 @@
         // Update the touch co-ordinates
         getTouchPos();
 
-        drawLine(ctx,touchX,touchY,12);
+        drawDot(ctx,touchX,touchY,12);
 
         // Prevents an additional mousedown event being triggered
         event.preventDefault();
-    }
-
-    function sketchpad_touchEnd() {
-        // Reset lastX and lastY to -1 to indicate that they are now invalid, since we have lifted the "pen"
-        lastX=-1;
-        lastY=-1;
     }
 
     // Draw something and prevent the default scrolling when touch movement is detected
@@ -126,11 +121,17 @@
         getTouchPos(e);
 
         // During a touchmove event, unlike a mousemove event, we don't need to check if the touch is engaged, since there will always be contact with the screen by definition.
-        drawLine(ctx,touchX,touchY,12); 
+        drawDot(ctx,touchX,touchY,12); 
 
         // Prevent a scrolling action as a result of this touchmove triggering.
         event.preventDefault();
     }
+
+    // Called when touch is lifted from the screen of the device.
+    function sketchpad_touchEnd(e) { 
+        // Update a local copy of the image for easier saving
+        updateImageLocal(canvas);
+      }
 
     // Get the touch position relative to the top-left of the canvas
     // When we get the raw values of pageX and pageY below, they take into account the scrolling on the page
@@ -168,8 +169,8 @@
 
             // React to touch events on the canvas
             canvas.addEventListener('touchstart', sketchpad_touchStart, false);
-            canvas.addEventListener('touchend', sketchpad_touchEnd, false);
             canvas.addEventListener('touchmove', sketchpad_touchMove, false);
+            canvas.addEventListener('touchend', sketchpad_touchEnd, false);
         }
     }
 </script>
@@ -178,7 +179,6 @@
 /* Some CSS styling */
 #sketchpadapp {
     /* Prevent nearby text being highlighted when accidentally dragging mouse outside confines of the canvas */
-    -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
     -moz-user-select: none;
@@ -205,13 +205,32 @@
     border-radius:4px;
     position:relative; /* Necessary for correct mouse co-ords in Firefox */
 }
-#clearbutton {
+#clear_button, #save_button {
+    float:left;
     font-size: 15px;
     padding: 10px;
     -webkit-appearance: none;
     background: #eee;
     border: 1px solid #888;
+    margin-bottom:5px;
 }
+#save_remote {
+    float:left;
+    margin-left:5px;
+}
+.save_box {
+    border:1px solid #bbb;
+    border-radius:4px;
+    padding:5px;
+    clear:both;
+}
+#image_display {
+    width:80px;
+    height:60px;
+    border:1px solid #000;
+    margin:15px;
+}
+
 </style>
 </head>
 
@@ -221,7 +240,23 @@
              Touchscreen and mouse support HTML5 canvas sketchpad.<br/><br/>
              Draw something by tapping or dragging.<br/><br/>
              Works on iOS, Android and desktop/laptop touchscreens using Chrome/Firefox/Safari.<br/><br/>
-             <input type="submit" value="Clear Sketchpad" id="clearbutton" onclick="clearCanvas(canvas,ctx);">
+             <input type="submit" value="Clear Sketchpad" id="clear_button" onclick="clearCanvas(canvas,ctx);">
+	
+             <input type="submit" value="View Image" id="save_button" onclick="viewImageLocal(canvas); return false;">
+	     <form name='save_remote' id='save_remote' method='POST' action='/sketchpad/save-image.php' onsubmit='saveImageRemote(canvas); return false;'>
+                 <input type="submit" value="Save Image" id="save_button">
+                 <input type="hidden" name="save_remote_data" id="save_remote_data">
+	     </form>
+
+	     <!-- Note: Make sure that webkit-touch-callout is not set to "none" in the CSS, otherwise the user won't be able to long-tap
+		  the thumbnail to download on iOS -->
+	     <div class="save_box">             
+	         Save your sketchpad by using right-click or long tap on the thumbnail below:<br>
+	         <center>
+		     <!-- Our Sketchpad thumbnail -->
+    	             <img id="image_display">
+                 </center>
+	     </div>
         </div>
         <div class="rightside">
             <canvas id="sketchpad" height="300" width="400">
