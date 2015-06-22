@@ -213,7 +213,10 @@
     }
 
 
-    function setBG(){
+    function setBG(imageFile){
+    	var background = new Image();
+	background.src = imageFile;
+	ctx.drawImage(background,0,0); 
 
     }
 </script>
@@ -294,7 +297,7 @@
             var reader = new FileReader();
 
             reader.onload = function (e) {
-                $('#sketchpad')
+                $('#blah')
                     .attr('src', e.target.result)
                     .width(150)
                     .height(200);
@@ -302,6 +305,8 @@
 
             reader.readAsDataURL(input.files[0]);
         }
+
+        setBG(input.files[0]);
     }</script>
 
 
