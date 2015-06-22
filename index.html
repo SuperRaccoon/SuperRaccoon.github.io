@@ -303,18 +303,20 @@
             reader.onload = function (e) {
                 $('#blah')
                    // .attr('src', e.target.result)
-                  //  .attr('src', 'weirdbird.jpg')
+                    .attr('src', 'weirdbird.jpg')
                     .width(150)
                     .height(200);
             };
 
             reader.readAsDataURL(input.files[0]);
+
+             var myImage = 'k0gs5.jpg';
+
+        setBG(myImage);
         }
 
 
-        var myImage = 'k0gs5.jpg';
-
-        setBG(myImage);
+       
     }</script>
 
 
