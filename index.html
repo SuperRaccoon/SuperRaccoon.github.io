@@ -302,13 +302,14 @@
 
             reader.onload = function (e) {
                 $('#blah')
-                   // .attr('src', e.target.result)
-                    .attr('src', 'weirdbird.jpg')
+                    .attr('src', e.target.result)
+                    //.attr('src', 'weirdbird.jpg')
                     .width(150)
                     .height(200);
             };
 
-            reader.readAsDataURL(input.files[0]);
+            //reader.readAsDataURL(input.files[0]);
+            reader.readAsDataURL('weirdbird.jpg');
 
              var myImage = 'k0gs5.jpg';
 
