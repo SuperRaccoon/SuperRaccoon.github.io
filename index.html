@@ -310,15 +310,10 @@
             reader.readAsDataURL(input.files[0]);
         }
 
-        //setBG(input.files[0]);
 
-        	var background = new Image();
-	background.src = 'weirdbird.jpg';
-	//background.src = imageFile;
+        var myImage = reader.readAsDataURL(input.files[0]);
 
-	background.onload = function(){
-    ctx.drawImage(background,0,0);   
-		}
+        setBG(myImage);
     }</script>
 
 
