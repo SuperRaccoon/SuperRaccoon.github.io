@@ -215,8 +215,11 @@
 
     function setBG(imageFile){
     	var background = new Image();
-	background = "weirdbird.jpg";
-	ctx.drawImage(background,0,0); 
+	background.src = 'weirdbird.jpg';
+
+	background.onload = function(){
+    ctx.drawImage(background,0,0);   
+		}
 
     }
 </script>
@@ -311,7 +314,6 @@
 
 
 
-
     <div id="sketchpadapp">
         <div class="leftside">
              Touchscreen and mouse support HTML5 canvas sketchpad.<br/><br/>
@@ -344,7 +346,7 @@
 	     </div>
         </div>
         <div class="rightside">
-            <canvas id="sketchpad" height="300" width="400" style="background: url('weirdbird.jpg')">
+            <canvas id="sketchpad" height="300" width="400">
             </canvas>
         </div>
     </div>
