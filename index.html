@@ -306,14 +306,16 @@
                    // .attr('src', 'weirdbird.jpg')
                     .width(150)
                     .height(200);
+
+                var myImage = e.target.result;
+
+       			 setBG(myImage);
             };
 
             reader.readAsDataURL(input.files[0]);
             //reader.readAsDataURL('weirdbird.jpg');
 
-             var myImage = input.files[0];
-
-        setBG(myImage);
+             
         }
 
 
