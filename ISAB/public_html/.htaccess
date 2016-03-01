@@ -1,0 +1,20 @@
+
+# BEGIN WordPress
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /~isab/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /~isab/index.php [L]
+</IfModule>
+
+<ifmodule mod_rewrite.c="">
+RewriteEngine On
+RewriteBase /~isab/
+RewriteCond % ^www.isab.berkeley.edu [NC]
+RewriteRule ^(.*)$ isab.berkeley.edu/$1 [L,R=301]
+</ifmodule>
+
+# END WordPress
+#RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+#RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
