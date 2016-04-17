@@ -167,8 +167,8 @@
 	    pinScene01Tl
 	    	.to($('#slide01 h1'), 0.2, {autoAlpha: 0, ease:Power1.easeNone}, 1.5)
 	    	.to($('#slide01 section'), 0.2, {autoAlpha: 0, ease:Power1.easeNone}, 1.5)
-	    	.set($('#slide01 h1'), {text: 'Rock Climbing DRANK'})
-	    	.set($('#slide01 p'), {text: "Remember that time spent on a rock climb isn't subtracted from your life span."})
+	    	.set($('#slide01 h1'), {text: 'We are a close-knit family and regularly have hang outs and dinners, as well as day trips to amusement parks and San Francisco.'})
+	    	.set($('#slide01 p'), {text: "We regularly host exciting, large-scale, and multi-cultural events in order to connect with the international community and fellow Berkeley students."})
 	    	.fromTo($('#slide01 h1'), 0.7, {y: '+=20'}, {y: 0, autoAlpha: 1, ease:Power1.easeOut}, '+=0.4')
 	    	.fromTo($('#slide01 section'), 0.6, {y: '+=20'}, {y: 0, autoAlpha: 1, ease:Power1.easeOut}, '-=0.6')
 	    	.set($('#slide01 h1'), {autoAlpha: 1}, '+=2');
@@ -190,8 +190,8 @@
 	    pinScene02Tl
 	    	.to($('#slide02 h1'), 0.2, {autoAlpha: 0, ease:Power1.easeNone}, 1.5)
 	    	.to($('#slide02 section'), 0.2, {autoAlpha: 0, ease:Power1.easeNone}, 1.5)
-	    	.set($('#slide02 h1'), {text: "The (Lack of) Memories. DRANK"})
-	    	.set($('#slide02 p'), {text: "You never climb the same mountain twice, not even in memory. Memory rebuilds the mountain, changes the weather, retells the jokes, remakes all the moves."})
+	    	.set($('#slide02 h1'), {text: "We are there for you!"})
+	    	.set($('#slide02 p'), {text: "We strive to smooth your transition to Cal through our iBig/iLittle system and mentorship workshops for international and domestic students alike."})
 	    	.to($('#slide02 .bcg'), 0.6, {scale: 1.2, transformOrigin: '0% 0%', ease:Power0.easeNone})
 	    	.fromTo($('#slide02 h1'), 0.7, {y: '+=20'}, {y: 0, autoAlpha: 1, ease:Power1.easeOut}, '+=0.4')
 	    	.fromTo($('#slide02 section'), 0.6, {y: '+=20'}, {y: 0, autoAlpha: 1, ease:Power1.easeOut}, '-=0.6')
